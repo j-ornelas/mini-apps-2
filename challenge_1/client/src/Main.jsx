@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Graph from './Graph.jsx'
+import Date from './Date.jsx';
 
 class Main extends React.Component {
   constructor(props){
@@ -10,36 +11,47 @@ class Main extends React.Component {
         labels: [],
         datasets: [{
           label: 'Price of BTC in USD',
+          backgroundColor: 'rgb(153, 204, 255)',
+          borderColor: 'rgb(75,75,75)',
+          borderWidth: 1,
+          pointRadius: 0,
+          pointHitRadius:10,
+          lineTension: 0,
           data: []
         }]
-      },
-
-      startDate: null ,
-      endDate: null
+      }
     }
+    this.formatDate = this.formatDate.bind(this);
   }
 
   componentDidMount(){
     this.getCoinInfo()
   }
 
-  getCoinInfoAlt(){
-    var URL = 'https://rest.coinapi.io/v1/quotes/BITSTAMP_SPOT_BTC_USD/history?time_start=2016-01-01T00:00:00'
-    axios.get(URL,{'headers':{'X-CoinAPI-Key': 'AF33DA2F-BD71-4E0C-AB20-119261DC3BA3'}})
-      .then(function(response){
-        console.log(response);
-      })
-      .catch(function(error){
-        console.log(error)
-      })
+  formatDate(gbDate){
+    // "04/04/2017"
+    // "2017-04-04"
+    // to be used later
+    var oldDate = gbDate.split("/");
+    var temp = [];
+    temp[0] = oldDate[2]
+    temp[1] = oldDate[1]
+    temp[2] = oldDate[0]
+    return temp.join("-")
   }
 
-  getCoinInfo(){
-      var URL = 'https://api.coindesk.com/v1/bpi/historical/close.json';
+
+
+  getCoinInfo(start, end, currency){
+      var URL = `https://api.coindesk.com/v1/bpi/historical/close.json${start}${end}${currency}`;
       var context = this;
-      axios.get(URL)
+      axios.get('/info', {
+        params: {
+          url:URL
+        }
+      })
         .then(function(response){
-          context.parseCoinInfo(response.data.bpi)
+          context.parseCoinInfo(response.data)
         })
         .catch(function(error){
           console.log(error)
@@ -53,17 +65,33 @@ class Main extends React.Component {
       labels.push(key);
       data.push(obj[key])
     }
+
     var currentState = this.state.chartData;
-    console.log(currentState)
     currentState.labels = labels;
     currentState.datasets[0].data = data;
-    this.setState({chartData: currentState})
+    var currentCurrency = document.getElementById('currency').value
+    currentState.datasets[0].label = `Price of BTC in ${currentCurrency}`
+    this.setState({chartData: currentState, })
+  }
+
+
+
+
+  updateDate(){
+    var start = document.getElementById('start').value
+    var end = document.getElementById('end').value
+    var currency = document.getElementById('currency').value
+    var curr = `&currency=${currency}`
+    this.getCoinInfo(`?start=${start}`, `&end=${end}`, curr)
   }
 
   render(){
+
     return (
       <div>
+      <button onClick={this.getCoinInfo.bind(this, '?start=2011-01-01', '&end=2018-04-04', '')}>all</button>
         <Graph chartData={this.state.chartData}/>
+        <Date updateDate={this.updateDate.bind(this)}/>
       </div >
     )
   }
