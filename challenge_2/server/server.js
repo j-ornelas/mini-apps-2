@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const title =  `BevMore Application`;
+const title =  `Checkout Compiler`;
 const path = require('path');
 const bodyParser = require('body-parser');
 

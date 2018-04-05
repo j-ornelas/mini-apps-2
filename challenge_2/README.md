@@ -1,2 +1,2 @@
-# mvp
-BevMore App
+# Checkout
+Checkout App
