@@ -1,5 +1,5 @@
 import React from 'react';
-import {Bar, Line, Pie} from 'react-chartjs-2';
+import {Line} from 'react-chartjs-2';
 
 
 export default function Graph (props){
@@ -8,7 +8,7 @@ export default function Graph (props){
     <Line
       data={props.chartData}
       width={200}
-      height={50}
+      height={89}
       options={{
         maintainAspectRatio: true
       }}
