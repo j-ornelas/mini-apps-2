@@ -1,0 +1,30 @@
+body {
+  background-color: whitesmoke
+}
+.odd {
+  background-color:pink;
+}
+
+.even {
+  background-color: white;
+}
+
+.pagination ul {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.pagination li {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.pagination .break a {
+
+    cursor: pointer;
+}
+
+.active {
+  background-color:blue;
+}
